@@ -9,7 +9,7 @@ def test_quadratic():
         assert quadratic(2,3)
 
 
-test_data_lower = [
+test_data = [
                 (5, 0, 0),
                 (1, 6, 8),
                 (1, 6, 5),
@@ -18,6 +18,6 @@ test_data_lower = [
                 (1, 6, 2),
 ]
 
-@pytest.mark.parametrize("a, b, c", test_data_lower)
-def test_min_boundary(a,b, c):
-    assert quadratic(a, b, c) ==
+@pytest.mark.parametrize("a, b, c, d", test_data)
+def test_regular(a,b, c):
+    assert quadratic(a, b, c) == d

@@ -3,10 +3,13 @@ from math import sqrt
 
 
 def quadratic(a, b, c):
-    if a.isinteger() and b.isinteger() and c.isinteger():
+    if a.is_integer() and b.is_integer() and c.is_integer():
+        if a ==0:
+            raise ZeroDivisionError("Cannot divide by zero")
         discrim = (b ^ 2) - (4 * a * c)
-        if discrim > -1:
-            root1 = sqrt(discriminant**2)
+        root1 = sqrt(sqrt(discrim ** 2))
+        if root1 > -1:
+
             r = (-b + root1)/(2*a)
             return r
         else:
