@@ -10,3 +10,4 @@ class Dog:
 
 rufus = Dog('Rufus', 8)
 fido = Dog('Fido', 6)
+chris = Dog('Chris', 7)
