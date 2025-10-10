@@ -10,9 +10,9 @@ gratedCheese = Item("Grated Cheese","100g",2.20,14)
 
 myBasket = ShoppingBasket()
 
-myBasket.addItem(tomatoSoup, 45)
+myBasket.addItem(tomatoSoup, 40)
 myBasket.addItem(blackOlives, 1)
 myBasket.addItem(mozarella, 2)
-myBasket.addItem(tomatoSoup, 1)
+myBasket.addItem(tomatoSoup, 5)
 
 myBasket.view()

@@ -24,7 +24,7 @@ class ShoppingBasket:
                 print("Invalid operation - Quantity must be a positive number!")
         else:
             print(f"Not enough of {item.name} to add to basket, adding {item.stock_level} instead.")
-            self.items[item.name] = 0 + item.stock_level
+            self.items[item] += item.stock_level
     # A method to remove an item from the shopping basket (or reduce it's quantity)    
     def removeItem(self,item,quantity=0):
         if quantity<=0: 
