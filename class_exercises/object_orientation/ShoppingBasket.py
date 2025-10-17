@@ -1,4 +1,4 @@
-from Items import Item
+from class_exercises.object_orientation.ItemClass import Item
 
 class ShoppingBasket:
     # Constructor

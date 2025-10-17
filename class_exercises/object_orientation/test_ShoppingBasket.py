@@ -55,5 +55,6 @@ def test_remove(setup_items_and_basket):
     assert gratedCheese.stock == 29
 
 def test_remove_more_than_quantity(setup_items_and_basket):
+    basket, blackOlives, *other = setup_items_and_basket
     with pytest.raises(TypeError):
         basket.removeItem(blackOlives,0.5)

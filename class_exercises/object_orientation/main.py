@@ -1,5 +1,5 @@
 #Shopping Basket Class - www.101computing.net/shopping-basket-class/
-from Items import Item
+from ItemClass import Item
 from ShoppingBasket import ShoppingBasket
 
 tomatoSoup = Item("Tomato Soup","200mL can", 0.70,43)
