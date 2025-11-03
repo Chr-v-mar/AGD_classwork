@@ -1,13 +1,5 @@
 from random import randint
-from symtable import Class
 
-import class_exercises
-
-
-#def dice_sum(num_dice,sides):
-    #total = sum(randint(1,sides) for roll in range (num_dice)) - alternative dice rolling system
-    #return total
-#print(dice_sum(1,8))
 
 def dice_sum(num_dice: int = 1, num_sides: int = 6):
     return sum(randint(1, num_sides) for _ in range(num_dice))
@@ -45,7 +37,7 @@ class Character():
     def return_roll_status(self):
         return f'{self.name} has rolled a {self.roll} roll for a total score of {self.score}'
 
-    def find_score(self,roll,score):
+    def find_score(self):
         self.roll = dice_sum(2)
         self.score = self.roll +self.skill
         return self.score
@@ -81,5 +73,7 @@ class PlayerCharacter(Character):
         luck = 6 + dice_sum(1,6)
         return cls(name,skill,stamina,luck)
 
-pc = Character('Dm',2,15)
-orc = Character('Orc',2,10)
+
+Hero = PlayerCharacter.generate_player_character('Chris')
+Evep = Character('EvilEep',2,15)
+Orc = Character('Orc',2,10)
