@@ -1,7 +1,6 @@
 from random import randint, choice
 import random
 
-
 def dice_sum(num_dice: int = 1, num_sides: int = 6):
     return sum(randint(1, num_sides) for _ in range(num_dice))
 
@@ -17,9 +16,6 @@ class Character():
     def __repr__(self):
         return f"Character('{self.name}', Skill = '{self.skill}', Stamina = '{self.stamina}')"
 
-
-
-
     @property
     def is_dead(self):
         return self.stamina <= 0
@@ -30,7 +26,6 @@ class Character():
             self.stamina = 0
         else:
             self.stamina = max(self.stamina, 1)
-
 
     def return_character_status(self):
         return f'{self.name} has {self.skill} skill and {self.stamina} stamina'
@@ -74,6 +69,7 @@ class PlayerCharacter(Character):
         luck = 6 + dice_sum(1,6)
         return cls(name,skill,stamina,luck)
 
+
 class Game:
     @classmethod
     def load_creatures(cls):
@@ -97,6 +93,14 @@ class Game:
 
     def set_player(self,player_character):
         self.player = player_character
+
+    def resolve_fight_round(self):
+        self.round_result = self.player.fight_round(self.opponent)
+
+
+
+
+
 
 Hero = PlayerCharacter.generate_player_character('Chris')
 Evep = Character('EvilEep',2,15)
