@@ -97,6 +97,8 @@ class Game:
     def resolve_fight_round(self):
         self.round_result = self.player.fight_round(self.opponent)
 
+    def return_character_status(self):
+        msg = f"{self.player.name} has skill {self.player.skill} skill and {self.player.stamina} stamina"
 
 
 
