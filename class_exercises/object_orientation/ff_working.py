@@ -79,10 +79,10 @@ class PlayerCharacter(Character):
         roll = dice_sum(2)
         if roll > self.luck:
             self.luck -= 1
-            return True
+            return False
         else:
             self.luck -= 1
-            return False
+            return True
 
 
 class Game:
