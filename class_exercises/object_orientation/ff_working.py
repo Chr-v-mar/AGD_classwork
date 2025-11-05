@@ -14,7 +14,10 @@ class Character():
         self.score = None
 
     def __repr__(self):
-        return f"Character('{self.name}', Skill = '{self.skill}', Stamina = '{self.stamina}')"
+        return f"Character('{self.name}', skill={self.skill}, stamina={self.stamina})"
+
+    def __str__(self):
+        return f'{self.name}'
 
     @property
     def is_dead(self):
@@ -28,10 +31,10 @@ class Character():
             self.stamina = max(self.stamina, 1)
 
     def return_character_status(self):
-        return f'{self.name} has {self.skill} skill and {self.stamina} stamina'
+        return f'{self.name} has skill {self.skill} and stamina {self.stamina}'
 
     def return_roll_status(self):
-        return f'{self.name} has rolled a {self.roll} roll for a total score of {self.score}'
+        return f'{self.name} rolled {self.roll} for a total score of {self.score}'
 
     def find_score(self):
         self.roll = dice_sum(2)
@@ -49,7 +52,7 @@ class Character():
             result = 'Win'
         elif other.score > self.score:
             self.take_hit()
-            result = 'Loss'
+            result = 'lost'
         else:
             self.take_hit()
             other.take_hit()
@@ -62,12 +65,24 @@ class PlayerCharacter(Character):
         super().__init__(name,skill,stamina)
         self.luck = luck
 
+    def __repr__(self):
+        return f"PlayerCharacter('{self.name}', skill={self.skill}, stamina={self.stamina}, luck={self.luck})"
+
     @classmethod
     def generate_player_character(cls,name):
         skill = 6 + dice_sum(1,6)
         stamina = 12 + dice_sum(2,6)
         luck = 6 + dice_sum(1,6)
         return cls(name,skill,stamina,luck)
+
+    def test_luck(self):
+        roll = dice_sum(2)
+        if roll > self.luck:
+            self.luck -= 1
+            return True
+        else:
+            self.luck -= 1
+            return False
 
 
 class Game:
@@ -88,7 +103,7 @@ class Game:
         self.creatures = self.load_creatures()
 
     def choose_opponent(self):
-        self.opponent = random.choice(self.creatures)
+        self.opponent = choice(self.creatures)
         self.creatures.remove(self.opponent)
 
     def set_player(self,player_character):
