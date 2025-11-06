@@ -19,6 +19,9 @@ class Character():
     def __str__(self):
         return f'{self.name}'
 
+    def return_character_status(self):
+        return f"{self.player.name} has skill {self.player.skill} skill and {self.player.stamina} stamina"
+
     @property
     def is_dead(self):
         return self.stamina <= 0
@@ -49,14 +52,14 @@ class Character():
         other.find_score()
         if self.score > other.score:
             other.take_hit()
-            result = 'Win'
+            result = 'won'
         elif other.score > self.score:
             self.take_hit()
             result = 'lost'
         else:
             self.take_hit()
             other.take_hit()
-            result = 'Draw'
+            result = 'draw'
         return result
 
 
@@ -112,13 +115,21 @@ class Game:
     def resolve_fight_round(self):
         self.round_result = self.player.fight_round(self.opponent)
 
-    def return_character_status(self):
-        msg = f"{self.player.name} has skill {self.player.skill} skill and {self.player.stamina} stamina"
+    def return_round_result(self):
+        msg =  (self.player.return_roll_status() + "\n" +
+                self.opponent.return_character_status())
+        if self.round_result == 'won':
+            msg += "Player won this round\n"
+        elif self.round_result == 'lost':
+            msg += "Player lost this round\n"
+        elif self.round_result == 'draw':
+            msg += "This round was a draw\n"
+        return msg
 
 
 
 
 
-Hero = PlayerCharacter.generate_player_character('Chris')
-Evep = Character('EvilEep',2,15)
-Orc = Character('Orc',2,10)
+#Hero = PlayerCharacter.generate_player_character('Chris')
+#Evep = Character('EvilEep',2,15)
+#Orc = Character('Orc',2,10)
