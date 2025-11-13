@@ -1,4 +1,5 @@
 from random import randint, choice
+import time
 import random
 
 def dice_sum(num_dice: int = 1, num_sides: int = 6):
@@ -19,8 +20,8 @@ class Character():
     def __str__(self):
         return f'{self.name}'
 
-    def return_character_status(self):
-        return f"{self.player.name} has skill {self.player.skill} skill and {self.player.stamina} stamina"
+    #def return_character_status(self):
+        #return f"{self.player.name} has skill {self.player.skill} skill and {self.player.stamina} stamina"
 
     @property
     def is_dead(self):
@@ -127,7 +128,50 @@ class Game:
         return msg
 
 
+class GameCLI:
+    def __init__(self):
+        self.game = Game()
+        self.run_game()
 
+    def run_game(self):
+        print("Welcome to Fighting Fantasy!")
+        time.sleep(0.5)
+        player_name = input("Enter a name to begin creating your character!: ")
+        self.game.set_player(PlayerCharacter.generate_player_character(player_name))
+        time.sleep(0.5)
+        print(f'Welcome {player_name}')
+        print(self.game.player.return_character_status())
+        self.fight_opponent()
+
+    def fight_opponent(self):
+        self.game.choose_opponent()
+        time.sleep(0.5)
+        print(f'You will be fighting {self.game.opponent}')
+        print(self.game.opponent.return_character_status() + '\n')
+        self.fight_battle()
+
+    def fight_battle(self):
+        continue_battle = True
+        while continue_battle:
+            print(self.game.return_round_result())
+            print()
+            action = input("Would you like to fight a round (y/n)? ").strip().lower()
+            if action == 'n':
+                print("You flee in terror!")
+                continue_battle = False
+            else:
+                self.game.resolve_fight_round()
+                print(self.game.return_round_result())
+            if self.game.player.is_dead:
+                print('You died')
+                continue_battle = False
+            if self.game.opponent.is_dead:
+                print(f"You defeated the {self.game.opponent.name}")
+                continue_battle = False
+
+
+if __name__ == "__main__":
+    GameCLI()
 
 
 #Hero = PlayerCharacter.generate_player_character('Chris')
