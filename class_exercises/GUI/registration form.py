@@ -60,11 +60,8 @@ class RadioFrame(tk.Frame):
     def __init__(self, parent = MainFrame):
         super().__init__(master = parent)
         self.gender = tk.Label(self, text="Gender")
-        self.language = tk.Label(self, text="Language")
-        self.selected_language = tk.StringVar()
         self.selected_gender = tk.StringVar()
         self.genders = ("Male", "Female")
-        self.languages = ("Python","Java")
 
         self.place_widget()
 
@@ -80,6 +77,22 @@ class RadioFrame(tk.Frame):
             r_btn = tk.Radiobutton(self, text=gender, variable=self.selected_gender, value=gender)
             r_btn.grid(row=6, column=i + 1, **settings)
 
+class ProgramCheckBox(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        options = ["C++", "Java", "JavaScript", "Python"]
+        self.program_options = list(zip(options, [tk.IntVar() for _ in options]))
+
+        self.cb_options = [tk.Checkbutton(self, text=option[0],
+                                          variable=option[1],
+                                          font=('Arial', 12),
+                                          command=self.cb_select
+                                          )
+                           for option in self.program_options]
+
+        for cb in self.cb_options:
+            cb.pack(side=tk.LEFT)
 
 if __name__ == '__main__':
     root = tk.Tk()
