@@ -19,25 +19,33 @@ class BackgroundColorFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
-        # Color choices
-        self.colors = ['red', 'green', 'yellow']
+        self.app = app
 
-        # Create a tk variable which will hold the value of the selcted color
+
+        self.colors = ['red','green','yellow']
+
         self.selected_color = tk.StringVar()
         self.selected_color.set(self.colors[0])
 
-        # Create radio buttons (list comprehension)
-        self.radio_options = [tk.Radiobutton(self, text=color,
-                                             value=color,
-                                             variable=self.selected_color,
+        self.radio_options = (tk.Radiobutton(self,
+                                             text=color,
+                                            value=color,
+                                            variable=self.selected_color,
                                              command=self.change_color)
-                              for color in self.colors]
+                              for color in self.colors)
 
-        self.place_widgets()
+        self.place_widgets2()
 
-    def place_widgets(self):
+    def place_widgets2(self):
+
         for ro in self.radio_options:
-            ro.pack(side=tk.TOP, anchor='w', padx=(5, 10), pady=5)
+            ro.pack(side=tk.LEFT, anchor='w', padx=(5,10), pady=5)
+
+    def change_color(self):
+        color = self.selected_color.get()
+        self.config(bg=color)
+        #self.root.config(bg=color)
+        self.app.clicker_frame.config(bg=color)
 
 
 
@@ -66,8 +74,10 @@ class ButtonClicker(tk.Frame):
     def click_button(self):
         self.counter += 1
         print(self.counter)
-        self.response_txt.config(text=self.counter)
+        #self.response_txt.config(text=self.counter)
 
 if __name__ == '__main__':
     app = ClickApp()
     app.mainloop()
+    background = BackgroundColorFrame(app)
+    background.pack()

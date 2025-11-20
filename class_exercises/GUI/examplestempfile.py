@@ -63,7 +63,7 @@ class BackgroundcolourFrame(tk.Frame):
     def place_widgets2(self):
 
         for ro in self.radio_options:
-            ro.pack(side=tk.LEFT, anchor='w', padx=(5,10), pady=5)
+            ro.pack(side=tk.LEFT, anchor='w', padx=(5,5), pady=5)
 
     def change_color(self):
         color = self.selected_color.get()
