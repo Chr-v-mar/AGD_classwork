@@ -10,7 +10,7 @@ COUNTRIES = [
 ]
 
 
-class MainFrame(tk.Tk):
+class MainFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
         self.title = tk.Label(self, text="Registration Form", font=("Arial", 20))
@@ -84,15 +84,13 @@ class ProgramCheckBox(tk.Frame):
         options = ["C++", "Java", "JavaScript", "Python"]
         self.program_options = list(zip(options, [tk.IntVar() for _ in options]))
 
-        self.cb_options = [tk.Checkbutton(self, text=option[0],
+        self.options = [tk.Checkbutton(self, text=option[0],
                                           variable=option[1],
-                                          font=('Arial', 12),
-                                          command=self.cb_select
                                           )
                            for option in self.program_options]
 
-        for cb in self.cb_options:
-            cb.pack(side=tk.LEFT)
+        for lang in self.options:
+            lang.pack(side=tk.LEFT)
 
 if __name__ == '__main__':
     root = tk.Tk()
