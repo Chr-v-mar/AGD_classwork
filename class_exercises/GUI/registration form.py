@@ -10,7 +10,7 @@ COUNTRIES = [
 ]
 
 
-class MainFrame(tk.Frame):
+class MainFrame(tk.Tk):
     def __init__(self, master):
         super().__init__(master)
         self.title = tk.Label(self, text="Registration Form", font=("Arial", 20))
@@ -60,8 +60,11 @@ class RadioFrame(tk.Frame):
     def __init__(self, parent = MainFrame):
         super().__init__(master = parent)
         self.gender = tk.Label(self, text="Gender")
+        self.language = tk.Label(self, text="Language")
+        self.selected_language = tk.StringVar()
         self.selected_gender = tk.StringVar()
         self.genders = ("Male", "Female")
+        self.languages = ("Python","Java")
 
         self.place_widget()
 
