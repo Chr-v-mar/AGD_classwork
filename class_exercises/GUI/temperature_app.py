@@ -59,7 +59,7 @@ class MainWindow(tk.Frame):
 
 
     def TempOutputGet(self):
-        match self.outputTempOptions.get():
+        match self.tempVar.get():
             case "celsius":
                 return self.Temp.celsius
             case "fahrenheit":
@@ -85,7 +85,6 @@ class MainWindow(tk.Frame):
         self.outputTemp.grid(row=3, column=3, padx=10, pady=3, sticky="we")
 
     def combo_select(self, event):
-        # Call back for selecting the country combo-box item
         print(f'You selected {self.tempVar.get()}')
 
 class Temp_buttons(tk.Frame):
