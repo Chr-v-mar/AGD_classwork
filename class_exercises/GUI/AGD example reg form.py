@@ -5,7 +5,6 @@ import json
 
 class RegistrationFrame(tk.Frame):
     """ RegistrationFrame displays a typical registration form"""
-
     def __init__(self, parent):
         super().__init__(parent)
 
