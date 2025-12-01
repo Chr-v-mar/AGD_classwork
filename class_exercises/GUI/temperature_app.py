@@ -6,13 +6,12 @@ from tkinter import ttk, StringVar
 class MainWindow(tk.Frame):
     def __init__(self,master):
         super().__init__(master)
-        self.Temp = Temp
+        self.Temp = Temp(0)
         self.outputTemps = []
         self.temperature = tk.StringVar()
         self.temp_symbols = []
         self.temp_in_frame = Temp_buttons(self)
         self.temp_in = 'celsius'
-        self.temp_in = self.temp_in_frame.selected_input_temperature.get()
         self.temperatures = ["celsius", "fahrenheit", "kelvin", "rankine", "romer"]
         self.tempVar = tk.StringVar()
         self.tempVar.set("Select temperature to convert to")
@@ -34,28 +33,30 @@ class MainWindow(tk.Frame):
                                        textvariable=self.tempVar,
                                        values=self.temperatures, )
         self.outputTempOptions.config(width=20,font=('Arial', 12))
-        self.outputTemp = tk.Label(self,text=f"{self.TempOutputGet()}")
+        self.outputTemp = tk.Label(self,text="0")
         self.outputTempOptions.bind('<<ComboboxSelected>>', self.combo_select)
         self.conversion_labels = []
 
         self.place_widgets()
 
     def TempConverter(self):
+        self.temp_in = self.temp_in_frame.selected_input_temperature.get()
+
         match self.temp_in:
             case "c":
-                self.Temp.celsius = self.temperature
-
+                self.Temp.celsius = int(self.temperature.get())
             case "f":
-                self.Temp.fahrenheit = self.temperature
-
+                self.Temp.fahrenheit = int(self.temperature.get())
             case "k":
-                self.Temp.kelvin = self.temperature
+                self.Temp.kelvin = int(self.temperature.get())
 
             case "ra":
-                self.Temp.rankine = self.temperature
+                self.Temp.rankine = int(self.temperature.get())
 
             case "ro":
-                self.Temp.romer = self.temperature
+                self.Temp.romer = int(self.temperature.get())
+
+        self.outputTemp.config(text=self.TempOutputGet())
 
 
     def TempOutputGet(self):
@@ -103,7 +104,6 @@ class Temp_buttons(tk.Frame):
 
     def radio_select(self):
         print(f'You selected {self.selected_input_temperature.get()}')
-
 
 class Background_color(tk.Frame):
     def __init__(self,master):
