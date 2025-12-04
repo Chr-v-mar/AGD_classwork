@@ -39,6 +39,11 @@ class MainWindow(tk.Frame):
 
         self.place_widgets()
 
+    #def TempValidation(self):
+        #input_temp = int(self.inputTemp.get())
+        #try:
+
+
     def TempConverter(self):
         self.temp_in = self.temp_in_frame.selected_input_temperature.get()
 
@@ -79,7 +84,7 @@ class MainWindow(tk.Frame):
         self.labels[0].grid(row=0, column=0, columnspan=2, padx=10, pady=3, sticky="w")
         for i, label in enumerate(self.labels[1:], 1):
             label.grid(row=i, column=0, padx=10, pady=3, sticky="w")
-        self.convert_button.grid(row=len(self.labels), column=1, padx=15, pady=(3, 10),sticky="w")
+        self.convert_button.grid(row=len(self.labels), column=0, padx=15, pady=(3, 10),sticky="w")
         self.inputTemp.grid(row=1, column=3, padx=(10, 25), pady=3, sticky="we")
         self.outputTempOptions.grid(row=2, column=3, padx=(10, 25), pady=3, sticky="we")
         self.temp_in_frame.grid(row=0, column=3, padx=10, pady=3, sticky="w")
