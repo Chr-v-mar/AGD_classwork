@@ -22,6 +22,13 @@ comment_data = [('Count me in', 1, 6),
                 ('Help with your thesis?', 2, 3),
                 ('Many congratulations', 5, 4),
 ]
+
+like_data = [
+    (1, 6), (2, 3),
+    (1, 5), (5, 4),
+    (2, 4), (4, 2),
+    (3, 6)
+]
 conn = sqlite3.connect('sm_app.sqlite')
 cursor = conn.cursor()
 
@@ -29,7 +36,7 @@ parameterised_write_query = """
 INSERT INTO users(name, age, gender, nationality)
     VALUES(?, ?, ?, ?)
 """
-#cursor.executemany(parameterised_write_query, data)
+cursor.executemany(parameterised_write_query, data)
 
 parameterised_insert_query = """
 INSERT INTO posts(title, description, user_id)
@@ -37,7 +44,7 @@ INSERT INTO posts(title, description, user_id)
 """
 
 #cursor.execute(parameterised_insert_query, ("Happy", "I am feeling very happy today", 1))
-#cursor.executemany(parameterised_insert_query, post_data)
+cursor.executemany(parameterised_insert_query, post_data)
 
 parameterised_comment_query = """
 INSERT INTO comments(COMMENT, user_id,post_id)
@@ -45,4 +52,9 @@ INSERT INTO comments(COMMENT, user_id,post_id)
 """
 cursor.executemany(parameterised_comment_query, comment_data)
 
+parameterised_like_query = """
+INSERT INTO likes(user_id,post_id)
+    VALUES(?, ?)
+"""
+cursor.executemany(parameterised_like_query, like_data)
 conn.commit()
