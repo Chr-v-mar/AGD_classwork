@@ -16,5 +16,16 @@ class Controller:
             activity_names = [activity.name for activity in activities]
         return activity_names
 
+    def get_register(self, activity_name):
+        with so.Session(bind=self.engine) as session:
+            stmt = sa.select(Activity).where(Activity.name == activity_name)
+            user = session.scalar(stmt)
+            person = user.person
+            people_names = [people.first_name for people in person]
+        return people_names
+
+    #def show_people(self):
+        #with so.Session(bind=self.engine) as session:
+
 if __name__ == '__main__':
     controller = Controller()

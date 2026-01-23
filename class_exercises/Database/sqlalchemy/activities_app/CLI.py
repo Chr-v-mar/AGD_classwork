@@ -13,6 +13,11 @@ class CLI:
         for activity in activities:
             print(activity)
 
+    def show_register(self):
+        activity_name = input('Enter activity name: ')
+        people = self.controller.get_person_activities(activity_name)
+        for person in people:
+            print(person)
 
 if __name__ == '__main__':
     cli = CLI()
