@@ -1,6 +1,9 @@
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
+from sqlalchemy import ForeignKey
+
+
 # Base is called an Abstract Base Class - our SQL Alchemy models will inherit from this class
 class Base(so.DeclarativeBase):
     pass
@@ -10,12 +13,13 @@ class Base(so.DeclarativeBase):
 # Note that this table is created in the sqlalchemy layer, not in sqlalchemy.orm - it will therefore
 # not be usable as a python object using the sqlalchemy ORM
 person_activities = sa.Table('person_activities',
-                             Base.metadata,
-                             sa.Column('id', sa.Integer, primary_key=True),
-                             sa.Column('activity_id', sa.ForeignKey('activities.id')),
-                             sa.Column('person_id', sa.ForeignKey('persons.id')),
-                             sa.UniqueConstraint('activity_id', 'person_id')
-                             )
+                           Base.metadata,
+                           sa.Column('id', sa.Integer, primary_key=True),
+                           sa.Column('activity_id', sa.ForeignKey('activities.id')),
+                           sa.Column('person_id', sa.ForeignKey('persons.id')),
+                           sa.UniqueConstraint('activity_id', 'person_id')
+                           )
+
 
 # Sets up an Activity table, this references "attendees" via the person_activities table.
 # Note that we use the 'new' SQLalchemy 2.0 method of creating columns mapped to python object attributes
@@ -28,6 +32,8 @@ class Activity(Base):
                                                            secondary=person_activities,
                                                            order_by='(Person.last_name, Person.first_name)',
                                                            back_populates="activities")
+
+
     # Gives a representation of an Activity (for printing out)
     def __repr__(self) -> str:
         return f"Activity(name='{self.name}')"
