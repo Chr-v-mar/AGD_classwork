@@ -24,6 +24,30 @@ class Controller:
             people_names = [people.first_name for people in person]
         return people_names
 
+    def add_people(self, first_name, last_name):
+        with so.Session(bind=self.engine) as session:
+            stmt = sa.insert(Person).values(first_name=first_name, last_name=last_name)
+            session.execute(stmt)
+
+    def add_activity(self, activity_name):
+        with so.Session(bind=self.engine) as session:
+            stmt = sa.insert(Activity).values(activity_name=activity_name)
+            session.execute(stmt)
+
+    def add_to_register(self, first_name, last_name):
+        with so.Session(bind=self.engine) as session:
+            stmt = sa.insert(Person).values(first_name=first_name, last_name=last_name)
+            session.execute(stmt)
+
+    def get_people(self):
+        with so.Session(bind=self.engine) as session:
+            stmt = sa.select(Person).order_by(Person.first_name)
+            user = session.scalar(stmt)
+            person = user.person
+            people_names = [people.first_name for people in person]
+        return people_names
+
+
     #def show_people(self):
         #with so.Session(bind=self.engine) as session:
 
