@@ -50,7 +50,8 @@ class CLI:
 
     def create_account(self):
         self.show_title('Create Account')
-        input('Under construction')
+        name = input('Enter your name: ')
+
         return self.login
 
     def user_home(self):

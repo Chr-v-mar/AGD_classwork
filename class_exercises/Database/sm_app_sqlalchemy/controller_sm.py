@@ -34,6 +34,10 @@ class Controller:
             user_names = session.scalars(sa.select(User.name).order_by(User.name)).all()
         return list(user_names)
 
+    def add_user(self, name: str, age: int, gender: str, nationality: str) -> None:
+        with so.Session(bind=self.engine) as session:
+            add = session.scalars()
+
 if __name__ == '__main__':
     controller = Controller()
     controller.set_current_user_from_name('Alice')
