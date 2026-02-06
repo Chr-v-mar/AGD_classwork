@@ -49,9 +49,14 @@ class CLI:
         return next_menu
 
     def create_account(self):
+        genders = {1: 'Male', 2: 'Female', 3: 'Other', 4: 'Professional'}
         self.show_title('Create Account')
         name = input('Enter your name: ')
-
+        age = int(input('Enter your age: '))
+        print("1 = Male\n2 = Female\n3 = Other\n4 = Professional")
+        gender = genders[int(input('Enter your gender: '))]
+        nationality = input('Enter your nationality: ')
+        self.controller.add_new_user(name, age, gender, nationality)
         return self.login
 
     def user_home(self):

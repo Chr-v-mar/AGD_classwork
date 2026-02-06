@@ -1,7 +1,9 @@
+from typing import Any
+
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 
-from class_exercises.Database.sm_app_sqlalchemy.models import User, Post, Comment
+import models
 
 
 class Controller:
@@ -10,9 +12,9 @@ class Controller:
         self.viewing_post_user_id: int|None = None
         self.engine = sa.create_engine(db_location)
 
-    def set_current_user_from_name(self, name:str) -> User|None:
+    def set_current_user_from_name(self, name:str) -> models.User | None:
         with so.Session(bind=self.engine) as session:
-            user = session.scalars(sa.select(User).where(User.name == name)).one_or_none()
+            user = session.scalars(sa.select(models.User).where(models.User.name == name)).one_or_none()
 
             if user is None:
                 # Fallback behaviour: clear current user and return None
@@ -26,17 +28,40 @@ class Controller:
         if user_id is None:
             user_id = self.current_user_id
         with so.Session(bind=self.engine) as session:
-            name = session.get(User, user_id).name
+            name = session.get(models.User, user_id).name
         return name
 
     def get_user_names(self) -> list[str]:
         with so.Session(bind=self.engine) as session:
-            user_names = session.scalars(sa.select(User.name).order_by(User.name)).all()
+            user_names = session.scalars(sa.select(models.User.name).order_by(models.User.name)).all()
         return list(user_names)
 
-    def add_user(self, name: str, age: int, gender: str, nationality: str) -> None:
+    def add_new_user(self, name: str, age: int, gender: str, nationality: str) -> None:
         with so.Session(bind=self.engine) as session:
-            add = session.scalars()
+            add_user = models.User(name=name, age=age, gender=gender, nationality=nationality)
+            session.add(add_user)
+            session.commit()
+
+    def get_user_posts(self):
+        with so.Session(bind=self.engine) as session:
+            posts = session.scalars(sa.select(models.Post).where(models.Post.user_id == self.current_user_id)).all()
+        return list(posts)
+
+    def get_posts(self):
+        with so.Session(bind=self.engine) as session:
+            posts = session.scalars(sa.select(models.Post).order_by(models.Post.id)).all()
+        return list(posts)
+
+    def get_user_comments(self):
+        with so.Session(bind=self.engine) as session:
+            comments = session.scalars(sa.select(models.Comment).where(models.Comment.user_id == self.current_user_id)).all()
+        return list(comments)
+    def get_comments(self):
+        with so.Session(bind=self.engine) as session:
+            comments = session.scalars(sa.select(models.Comment).order_by(models.Comment.id)).all()
+        return list(comments)
+
+
 
 if __name__ == '__main__':
     controller = Controller()
