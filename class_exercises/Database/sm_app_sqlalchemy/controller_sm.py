@@ -48,18 +48,39 @@ class Controller:
         return list(posts)
 
     def get_posts(self):
+        post_information = []
         with so.Session(bind=self.engine) as session:
             posts = session.scalars(sa.select(models.Post).order_by(models.Post.id)).all()
-        return list(posts)
+            for post in posts:
+                post_information.append({'title': post.title,
+                                         'content': post.description,
+                                         'likes': post.number_of_likes})
+
+
+        return post_information
 
     def get_user_comments(self):
         with so.Session(bind=self.engine) as session:
             comments = session.scalars(sa.select(models.Comment).where(models.Comment.user_id == self.current_user_id)).all()
         return list(comments)
+
     def get_comments(self):
         with so.Session(bind=self.engine) as session:
             comments = session.scalars(sa.select(models.Comment).order_by(models.Comment.id)).all()
         return list(comments)
+
+    def post_a_post(self,  name: str, text: str, user: int) -> None:
+        with so.Session(bind=self.engine) as session:
+            postpost = models.Post(title= name, description=text, user_id= user)
+            session.add(postpost)
+            session.commit()
+
+    def post_a_comment(self, text: str, user: int, post: int) -> None:
+        with so.Session(bind=self.engine) as session:
+            postcomment = models.Comment(comment=text, user_id=user, post_id=post)
+            session.add(postcomment)
+            session.commit()
+
 
 
 

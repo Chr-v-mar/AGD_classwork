@@ -62,9 +62,43 @@ class CLI:
     def user_home(self):
         user_name = self.controller.get_user_name()
         self.show_title(f'User Home - {user_name.title()}')
-        input('Under construction')
-        return self.login
+        print("1 = Posts, 2 = Profiles, 3 = Settings")
+        choice = int(input("Enter your choice: "))
+        if choice == 1:
+            return self.post_home()
+        elif choice == 2:
+            return self.profiles()
+        elif choice == 3:
+            return self.settings()
+        else:
+            return self.login
 
+    def post_home(self):
+        print("Under construction")
+        next_menu = self.user_home()
+        post_type = int(input('1 to view own posts, 2 to view other posts\nEnter your choice: '))
+        if post_type == 1:
+                next_menu = self.view_my_posts()
+        elif post_type == 2:
+            next_menu = self.view_other_posts()
+        return next_menu
+
+    def view_my_posts(self):
+        print("Under construction")
+        return self.user_home()
+
+    def view_other_posts(self):
+        print("Under construction")
+        return self.user_home()
+
+
+    def profiles(self):
+        print("Under construction")
+        return self.user_home()
+
+    def settings(self):
+        print("Under construction")
+        return self.user_home()
 
 if __name__ == '__main__':
     cli = CLI()
