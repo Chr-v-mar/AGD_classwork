@@ -32,9 +32,13 @@ class Controller:
         return name
 
     def get_user_names(self) -> list[str]:
+        user_information = []
         with so.Session(bind=self.engine) as session:
             user_names = session.scalars(sa.select(models.User.name).order_by(models.User.name)).all()
-        return list(user_names)
+            for user in user_names:
+                user_information.append(user.name)
+
+        return user_information
 
     def add_new_user(self, name: str, age: int, gender: str, nationality: str) -> None:
         with so.Session(bind=self.engine) as session:
@@ -43,9 +47,14 @@ class Controller:
             session.commit()
 
     def get_user_posts(self):
+        post_information = []
         with so.Session(bind=self.engine) as session:
             posts = session.scalars(sa.select(models.Post).where(models.Post.user_id == self.current_user_id)).all()
-        return list(posts)
+            for post in posts:
+                post_information.append({'title': post.title,
+                                         'content': post.description,
+                                         'likes': post.number_of_likes})
+        return post_information
 
     def get_posts(self):
         post_information = []
@@ -60,14 +69,20 @@ class Controller:
         return post_information
 
     def get_user_comments(self):
+        comments_information = []
         with so.Session(bind=self.engine) as session:
             comments = session.scalars(sa.select(models.Comment).where(models.Comment.user_id == self.current_user_id)).all()
-        return list(comments)
+            for comm in comments:
+                comments_information.append({'comment': comm.comment})
+        return comments_information
 
     def get_comments(self):
+        comments_information = []
         with so.Session(bind=self.engine) as session:
             comments = session.scalars(sa.select(models.Comment).order_by(models.Comment.id)).all()
-        return list(comments)
+            for commente in comments:
+                comments_information.append({'comment': commente.comment})
+        return comments_information
 
     def post_a_post(self,  name: str, text: str, user: int) -> None:
         with so.Session(bind=self.engine) as session:
@@ -80,6 +95,29 @@ class Controller:
             postcomment = models.Comment(comment=text, user_id=user, post_id=post)
             session.add(postcomment)
             session.commit()
+
+    def like_post_toggle(self, post_id: int) -> None:
+        with so.Session(bind=self.engine) as session:
+            current_user = session.query(models.User).get(self.current_user_id)
+            if current_user not in models.Post.liked_by_users:
+                models.Post.liked_by_users.append(current_user)
+            else:
+                models.Post.liked_by_users.remove(current_user)
+            session.commit()
+
+    def like_comment_toggle(self, comment_id: int) -> None:
+        with so.Session(bind=self.engine) as session:
+            current_user = self.get_user_name(self.current_user_id)
+            if current_user not in models.Comment.liked_by_users:
+                models.Comment.liked_by_users.append(current_user)
+            else:
+                models.Comment.liked_by_users.remove(current_user)
+            session.commit()
+
+    #def delete_post(self, post_id: int) -> None:
+        #with so.Session(bind=self.engine) as session:
+
+
 
 
 

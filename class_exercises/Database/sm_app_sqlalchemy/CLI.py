@@ -84,11 +84,11 @@ class CLI:
         return next_menu
 
     def view_my_posts(self):
-        print("Under construction")
+        self.controller.get_user_posts()
         return self.user_home()
 
     def view_other_posts(self):
-        print("Under construction")
+        self.controller.get_posts()
         return self.user_home()
 
 

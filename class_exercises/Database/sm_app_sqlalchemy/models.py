@@ -39,6 +39,12 @@ class User(Base):
         secondary=likes_table,
         back_populates='liked_by_users',
     )
+
+    liked_comments: Mapped[list['Comment']] = relationship(
+        secondary=likes_table,
+        back_populates='liked_by_users',
+    )
+
     # One-to-many: Comments authored by the user
     comments_made: Mapped[list['Comment']] = relationship(
         back_populates='user',
@@ -99,6 +105,15 @@ class Comment(Base):
 
     # Many-to-one relationship defining the post which is being commented about
     post: Mapped['Post'] = so.relationship(back_populates='comments')
+
+    liked_by_users: Mapped[List["User"]] = relationship(
+        secondary=likes_table,
+        back_populates='liked_comments',
+    )
+
+    @property
+    def number_of_likes(self) -> int:
+        return len(self.liked_by_users)
 
 
     def __repr__(self):
