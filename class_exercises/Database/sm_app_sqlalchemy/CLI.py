@@ -91,6 +91,12 @@ class CLI:
         self.controller.get_posts()
         return self.user_home()
 
+    def add_a_post(self):
+        title = input('Enter a title: ')
+        description = input('Enter a description: ')
+        self.controller.post_a_post()
+        return self.user_home()
+
 
     def profiles(self):
         print("Under construction")
