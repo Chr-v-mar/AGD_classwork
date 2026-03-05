@@ -1,9 +1,7 @@
-from typing import Any
-
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 
-import models
+from class_exercises.Database.sm_app_sqlalchemy.models import User, Post, Comment
 
 
 class Controller:
@@ -12,116 +10,98 @@ class Controller:
         self.viewing_post_user_id: int|None = None
         self.engine = sa.create_engine(db_location)
 
-    def set_current_user_from_name(self, name:str) -> models.User | None:
+    def set_current_user_from_name(self, name:str) -> User|None:
         with so.Session(bind=self.engine) as session:
-            user = session.scalars(sa.select(models.User).where(models.User.name == name)).one_or_none()
+            statement = sa.select(User).where(User.name == name)
+            user = session.scalars(statement).one_or_none()
 
             if user is None:
                 # Fallback behaviour: clear current user and return None
                 self.current_user_id = None
                 return None
-
-            self.current_user_id = user.id
+            else:
+                self.current_user_id = user.id
         return user
 
-    def get_user_name(self, user_id: int|None = None) -> 'str':
+    def get_user_names(self) -> list[str]:
+        with so.Session(bind=self.engine) as session:
+            user_names = session.scalars(sa.select(User.name).order_by(User.name)).all()
+        return list(user_names)
+
+    def create_user(self, name: str, age: int, gender: str, nationality: str) -> User:
+        with so.Session(bind=self.engine) as session:
+            user = User(name=name, age=age, gender=gender, nationality=nationality)
+            session.add(user)
+            session.commit()
+            # Sets current user to the newly-created user
+            self.set_current_user_from_name(user.name)
+        return user
+
+    def get_user_info(self, user_id: int|None = None) -> dict:
         if user_id is None:
             user_id = self.current_user_id
-        with so.Session(bind=self.engine) as session:
-            name = session.get(models.User, user_id).name
-        return name
 
-    def get_user_names(self) -> list[str]:
-        user_information = []
         with so.Session(bind=self.engine) as session:
-            user_names = session.scalars(sa.select(models.User.name).order_by(models.User.name)).all()
-            for user in user_names:
-                user_information.append(user.name)
+            user = session.get(User, user_id)
+            user_info = {'name': user.name,
+                         'age': user.age,
+                         'gender': user.gender,
+                         'nationality': user.nationality,
+                         }
+            return user_info
 
-        return user_information
-
-    def add_new_user(self, name: str, age: int, gender: str, nationality: str) -> None:
+    def get_user_posts(self, user_name: str) -> list[dict]:
         with so.Session(bind=self.engine) as session:
-            add_user = models.User(name=name, age=age, gender=gender, nationality=nationality)
-            session.add(add_user)
+            user = session.scalars(sa.select(User).where(User.name == user_name)).one_or_none()
+            posts_info = [{'id': post.id,
+                           'title' : post.title,
+                           'description': post.description,
+                           'number_likes': len(post.liked_by_users),
+                           }
+                          for post in user.posts]
+            self.viewing_post_user_id = user.id
+        return posts_info
+
+    def get_comments(self, post_id) -> list[dict]:
+        with so.Session(bind=self.engine) as session:
+            post = session.get(Post, post_id)
+            comments_info = [{'comment': comment.comment,
+                              'author': comment.user.name,}
+                             for comment in post.comments]
+        return comments_info
+
+    def write_new_post(self, title, description, user_id = None) -> int:
+        if user_id is None:
+            user_id = self.current_user_id
+
+        with so.Session(bind=self.engine) as session:
+            # Quick method to SELECT one record via a primary key id
+            user = session.get(User, user_id)
+            post = Post(title=title, description=description)
+            post_id = post.id
+            user.posts.append(post)
             session.commit()
+        return post_id
 
-    def get_user_posts(self):
-        post_information = []
+    def like_post_toggle(self, post_id, user_id = None):
+        if user_id is None:
+            user_id = self.current_user_id
+
         with so.Session(bind=self.engine) as session:
-            posts = session.scalars(sa.select(models.Post).where(models.Post.user_id == self.current_user_id)).all()
-            for post in posts:
-                post_information.append({'title': post.title,
-                                         'content': post.description,
-                                         'likes': post.number_of_likes})
-        return post_information
-
-    def get_posts(self):
-        post_information = []
-        with so.Session(bind=self.engine) as session:
-            posts = session.scalars(sa.select(models.Post).order_by(models.Post.id)).all()
-            for post in posts:
-                post_information.append({'title': post.title,
-                                         'content': post.description,
-                                         'likes': post.number_of_likes})
-
-
-        return post_information
-
-    def get_user_comments(self):
-        comments_information = []
-        with so.Session(bind=self.engine) as session:
-            comments = session.scalars(sa.select(models.Comment).where(models.Comment.user_id == self.current_user_id)).all()
-            for comm in comments:
-                comments_information.append({'comment': comm.comment})
-        return comments_information
-
-    def get_comments(self):
-        comments_information = []
-        with so.Session(bind=self.engine) as session:
-            comments = session.scalars(sa.select(models.Comment).order_by(models.Comment.id)).all()
-            for commente in comments:
-                comments_information.append({'comment': commente.comment})
-        return comments_information
-
-    def post_a_post(self,  name: str, text: str, user: int) -> None:
-        with so.Session(bind=self.engine) as session:
-            postpost = models.Post(title= name, description=text, user_id= user)
-            session.add(postpost)
-            session.commit()
-
-    def post_a_comment(self, text: str, user: int, post: int) -> None:
-        with so.Session(bind=self.engine) as session:
-            postcomment = models.Comment(comment=text, user_id=user, post_id=post)
-            session.add(postcomment)
-            session.commit()
-
-    def like_post_toggle(self, post_id: int) -> None:
-        with so.Session(bind=self.engine) as session:
-            current_user = session.query(models.User).get(self.current_user_id)
-            if current_user not in models.Post.liked_by_users:
-                models.Post.liked_by_users.append(current_user)
+            user = session.get(User, user_id)
+            post = session.get(Post, post_id)
+            if user in post.liked_by_users:
+                post.liked_by_users.remove(user)
             else:
-                models.Post.liked_by_users.remove(current_user)
+                post.liked_by_users.append(user)
             session.commit()
 
-    def like_comment_toggle(self, comment_id: int) -> None:
+    def comment_on_post(self, post_id, comment, user_id = None):
+        if user_id is None:
+            user_id = self.current_user_id
+
         with so.Session(bind=self.engine) as session:
-            current_user = self.get_user_name(self.current_user_id)
-            if current_user not in models.Comment.liked_by_users:
-                models.Comment.liked_by_users.append(current_user)
-            else:
-                models.Comment.liked_by_users.remove(current_user)
+            post = session.get(Post, post_id)
+            new_comment = Comment(user_id=user_id, comment=comment)
+            post.comments.append(new_comment)
             session.commit()
-
-    #def delete_post(self, post_id: int) -> None:
-        #with so.Session(bind=self.engine) as session:
-
-
-
-
-
-
-if __name__ == '__main__':
-    controller = Controller()
-    controller.set_current_user_from_name('Alice')
