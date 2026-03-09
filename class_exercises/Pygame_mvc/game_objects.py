@@ -1,29 +1,34 @@
 class GameObj:
-    def __init__(self,name,pos,solid):
+    def __init__(self, name, pos, solid):
         self.name = name
         self.pos = pos
         self.solid = solid
 
-    #def __str__(self):
-
+    def __repr__(self):
+        return f"GameObj({self.name}, {self.pos}, {self.solid})"
 
     def is_solid(self):
         return self.solid
 
 class Character(GameObj):
-    def __init__(self,name,pos,solid):
-        self.name = name
-        self.pos = pos
+    def __init__(self, name, pos, solid):
+        GameObj.__init__(self, name, pos, solid)
 
-    def move(self,direction,value):
-        future = self.find_next_location(direction,value)
-        if self.future.is_solid():
-            self.solid = future
+    def find_next_move(self, direction):
+        row, col = self.pos
+        match direction.lower():
+            case "north":
+                return row - 1, col
+            case "south":
+                return row + 1, col
+            case "east":
+                return row, col + 1
+            case "west":
+                return row, col - 1
+            case _:
+                return None
 
-        return self.pos
-
-    def find_next_location(self,direction,value):
-        future_pos = self.pos[direction] + 1
-        return future_pos
-
-
+    def move(self, game, direction):
+        new_pos = self.find_next_move(direction)
+        if new_pos:
+            game.move_character(self, new_pos)
