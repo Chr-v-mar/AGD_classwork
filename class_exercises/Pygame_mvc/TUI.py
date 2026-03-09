@@ -40,9 +40,9 @@ class GameTUI:
         print()
 
     def player_turn(self):
-        command = input("Move (north/south/east/west) or quit: ").lower()
+        command = input("Move (north/south/east/west) or quit (q): ").lower()
 
-        if command == "quit":
+        if command == "q":
             return False
 
         self.player.move(self.game, command)
