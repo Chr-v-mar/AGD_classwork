@@ -8,8 +8,16 @@ class GameTUI:
         self.game = Game()
         self.game.set_up()
 
-        # spawn player at first empty tile
-        self.player = Character("P", (0, 0), False)
+        # find the start tile
+        start_tiles = self.game.find_objects_by_name("S")
+
+        if start_tiles:
+            start_pos = start_tiles[0].pos
+        else:
+            start_pos = (0, 0)  # fallback if S not found
+
+        # spawn player on start tile
+        self.player = Character("P", start_pos, False)
         self.game.characters.append(self.player)
 
     def build_grid(self):
