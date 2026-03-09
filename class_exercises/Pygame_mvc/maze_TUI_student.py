@@ -16,16 +16,13 @@ class TextInterface:
 
         max_row = max(obj.pos[0] for obj in self.game.background)
         max_col = max(obj.pos[1] for obj in self.game.background)
-
-        # create empty grid
         self.game_area = [["." for _ in range(max_col + 1)] for _ in range(max_row + 1)]
 
-        # place background
+
         for obj in self.game.background:
             r, c = obj.pos
             self.game_area[r][c] = obj.name[0]
 
-        # place characters
         for char in self.game.characters:
             r, c = char.pos
             self.game_area[r][c] = char.name[0]
@@ -34,23 +31,19 @@ class TextInterface:
         """Draw the grid with borders and wall symbols."""
 
         self._create_area()
-
         rows = len(self.game_area)
         cols = len(self.game_area[0])
-
-        # top border
         print("┌" + "─" * (cols * 2) + "┐")
 
         for row in self.game_area:
             line = "│"
             for cell in row:
                 if cell == "W":
-                    cell = "\u2593"  # gray block
+                    cell = "\u2593"
                 line += cell + " "
             line += "│"
             print(line)
 
-        # bottom border
         print("└" + "─" * (cols * 2) + "┘")
 
     def _handle_input(self):
@@ -70,7 +63,6 @@ class TextInterface:
     def main_loop(self):
         """Keep drawing the area and asking for player moves while running."""
 
-        print("Welcome to Andrew's Game")
 
         while self.running:
             self._draw_area()

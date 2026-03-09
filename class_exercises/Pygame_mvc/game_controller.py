@@ -18,6 +18,12 @@ class Game:
             self.background = background
         elif background == None or characters == None:
             self.set_background_from_file("floor_plan.csv")
+        try:
+            position = self.find_objects_by_name("S")
+            self.characters.append(Character(name="X", pos= position, solid= False))
+        except IndexError:
+            pass
+
 
     def add_background_object(self, btype, pos, solid):
         self.background.append(GameObj(name=btype, pos=pos, solid=solid))
@@ -30,6 +36,7 @@ class Game:
                 for j, obj in enumerate(row):
                     solid = obj == "W"
                     self.add_background_object(obj, (i, j), solid)
+        self.dimensions = (i+1, j+1)
 
 
     def check_collision(self, pos):

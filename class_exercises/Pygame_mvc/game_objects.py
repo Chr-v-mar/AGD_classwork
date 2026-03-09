@@ -17,13 +17,13 @@ class Character(GameObj):
     def find_next_move(self, direction):
         row, col = self.pos
         match direction.lower():
-            case "north":
+            case "w":
                 return row - 1, col
-            case "south":
+            case "s":
                 return row + 1, col
-            case "east":
+            case "d":
                 return row, col + 1
-            case "west":
+            case "a":
                 return row, col - 1
             case _:
                 return None

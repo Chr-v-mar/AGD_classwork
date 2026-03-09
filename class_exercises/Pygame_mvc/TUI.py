@@ -1,72 +1,40 @@
 from game_controller import Game
-from game_objects import Character
 
 
-class GameTUI:
-
+class TextInterface:
+    """ Create a text-based interface for the turn-based game."""
     def __init__(self):
         self.game = Game()
         self.game.set_up()
+        self.player = self.game.characters[0]
+        self.game_area = []
+        self.running = True
 
-        # find the start tile
-        start_tiles = self.game.find_objects_by_name("S")
+    def _create_area(self):
+        """ Create a list of lists where each [row][col] in self.game_area is given the first letter of the background or character in that grid location. If there is no background or character in a grid location, use the default '.'"""
+        pass
 
-        if start_tiles:
-            start_pos = start_tiles[0].pos
-        else:
-            start_pos = (0, 0)  # fallback if S not found
 
-        # spawn player on start tile
-        self.player = Character("P", start_pos, False)
-        self.game.characters.append(self.player)
+    def _draw_area(self):
+        """ Loop through each row, join the characters in that row and print it out 'W' in the grid is replaced by '\u2593' (a gray square), borders of the grid are shown using the unicode box-drawing characters (https://jrgraphix.net/r/Unicode/2500-257F)"""
+        pass
 
-    def build_grid(self):
-        grid = {}
 
-        for obj in self.game.background:
-            grid[obj.pos] = obj.name
+    def _handle_input(self):
+        """Ask the user to input a direction and use game.move_character to move in that direction.
+        Set self.running to false if the user enters Q."""
+        pass
 
-        for char in self.game.characters:
-            grid[char.pos] = char.name
 
-        return grid
 
-    def draw(self):
-        grid = self.build_grid()
-
-        max_row = max(pos[0] for pos in grid)
-        max_col = max(pos[1] for pos in grid)
-
-        print("\nGAME MAP\n")
-
-        for r in range(max_row + 1):
-            row = ""
-            for c in range(max_col + 1):
-                row += grid.get((r, c), ".") + " "
-            print(row)
-
-        print()
-
-    def player_turn(self):
-        command = input("Move (north/south/east/west) or quit (q): ").lower()
-
-        if command == "q":
-            return False
-
-        self.player.move(self.game, command)
-
-        return True
-
-    def run(self):
-
-        running = True
-
-        while running:
-            print("\n" * 5)
-            self.draw()
-            running = self.player_turn()
+    def main_loop(self):
+        """Keep drawing the area and asking for player moves while self.runnng is True."""
+        print("Welcome to Andrew's Game")
+        while self.running:
+            self._draw_area()
+            self._handle_input()
 
 
 if __name__ == "__main__":
-    tui = GameTUI()
-    tui.run()
+    tui = TextInterface()
+    tui.main_loop()
