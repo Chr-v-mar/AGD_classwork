@@ -46,10 +46,12 @@ class GameGUI:
 
     @staticmethod
     def _convert_position(pos: tuple, center: bool = False) -> tuple[int, int]:
-        """ Convert a grid position in the game to an (x, y) coordinate
-                if centre is false the position returned is top-left and if center is true
-                the position returned is the centre """
-        ...
+        x, y = pos[1]*SQUARE_SIZE,pos[0]*SQUARE_SIZE
+        return x,y
+        """ Convert a grid position in the game to an (x, y) coordinate"""
+        """if centre is false the position returned is top-left and if center is true"""
+        """the position returned is the centre """
+
 
     def main_loop(self):
         while self.running:
@@ -88,12 +90,15 @@ class GameGUI:
         for bg in self.game.background:
             grid_x, grid_y = self._convert_position(bg.pos)
             color = BACKGROUND_COLORS[bg.name]
-            pygame.draw.rect(self.screen, color, pygame.Rect(grid_x, grid_y, SQUARE_SIZE, SQUARE_SIZE))
+            pygame.draw.rect(self.screen, color, (grid_x, grid_y, SQUARE_SIZE, SQUARE_SIZE))
 
     def _draw_characters(self):
         """Loop through the characters and draw a circle for each character"""
-        ...
+        for character in self.game.characters:
+            grid_x, grid_y = self._convert_position(character.pos)
+            color = PLAYER_COLOR
+            pygame.draw.circle(self.screen, color, grid_x, grid_y, SQUARE_SIZE)
 
 if __name__ == "__main__":
     game = GameGUI()
-    game.main_loop()
+    # game.main_loop()

@@ -17,7 +17,7 @@ class Game:
             self.characters = characters
             self.background = background
         elif background == None or characters == None:
-            self.set_background_from_file("floor_plan.csv")
+            self.set_background_from_file("floor_plan1.csv")
         try:
             position = self.find_objects_by_name("S")
             self.characters.append(Character(name="X", pos= position, solid= False))
@@ -66,3 +66,8 @@ class Game:
     def show_game_grid(self):
         for cell in sorted(self.background, key=lambda unit: unit.pos):
             print(cell.name)
+
+
+if __name__ == "__main__":
+    game = Game()
+    game.set_up()
