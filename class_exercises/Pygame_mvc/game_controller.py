@@ -19,8 +19,8 @@ class Game:
         elif background == None or characters == None:
             self.set_background_from_file("floor_plan1.csv")
         try:
-            position = self.find_objects_by_name("S")
-            self.characters.append(Character(name="X", pos= position, solid= False))
+            start_cell = self.find_objects_by_name("S")[0]
+            self.characters.append(Character(name="X", pos= start_cell.pos, solid= False))
         except IndexError:
             pass
 
